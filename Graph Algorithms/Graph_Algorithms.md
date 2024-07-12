@@ -8,14 +8,24 @@ import java.util.*;
 // Class representing a node in the graph
 class Node {
     String name;
+    int id;
     List<Node> neighbors;
     List<Edge> edges;
     boolean visited;
     int distance; // For shortest path algorithms
     int inDegree; // For topological sort
 
+    Node(int id) {
+        this.id = id;
+        init();
+    }
+
     Node(String name) {
         this.name = name;
+        init();
+    }
+
+    private void init() {
         this.neighbors = new ArrayList<>();
         this.edges = new ArrayList<>();
         this.visited = false;
@@ -32,7 +42,7 @@ class Node {
 
     @Override
     public String toString() {
-        return this.name;
+        return this.name+""+this.id;
     }
 }
 
@@ -106,7 +116,7 @@ public class GraphExample {
 
 
 | **Algorithm**                | **Description**                                           | **Steps**                                                                                                                                                                                                                                                                                             | **Java Code**                                                                                                                                                                                                                                                                                                                                                                           | 
-|------------------------------|-----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|------------------|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Depth-First Search (DFS)** | Traverses the graph depth-ward, visiting nodes and backtracking. | 1. If the node is null, return.<br>2. Visit the node.<br>3. Mark the node as visited.<br>4. For each neighbor of the node:<br>&ensp;&ensp;- If the neighbor has not been visited, call DFS on the neighbor.                                                                                                                                   | void DFS(Node node) {<br>&ensp;if (node == null) return;<br>&ensp;visit(node);<br>&ensp;node.visited = true;<br>&ensp;for (Node neighbor : node.neighbors) {<br>&ensp;&ensp;if (!neighbor.visited) {<br>&ensp;&ensp;&ensp;DFS(neighbor);<br>&ensp;&ensp;}<br>&ensp;}<br>}                                                                                                   | 
 | **Breadth-First Search (BFS)**| Traverses the graph level by level using a queue.         | 1. Initialize a queue with the start node.<br>2. Mark the start node as visited.<br>3. While the queue is not empty:<br>&ensp;&ensp;- Remove a node from the queue.<br>&ensp;&ensp;- Visit the node.<br>&ensp;&ensp;- For each neighbor of the node:<br>&ensp;&ensp;&ensp;&ensp;- If the neighbor has not been visited, add it to the queue and mark it as visited. | void BFS(Node start) {<br>&ensp;Queue<Node> queue = new LinkedList<>();<br>&ensp;queue.add(start);<br>&ensp;start.visited = true;<br>&ensp;while (!queue.isEmpty()) {<br>&ensp;&ensp;Node node = queue.poll();<br>&ensp;&ensp;visit(node);<br>&ensp;&ensp;for (Node neighbor : node.neighbors) {<br>&ensp;&ensp;&ensp;if (!neighbor.visited) {<br>&ensp;&ensp;&ensp;&ensp;queue.add(neighbor);<br>&ensp;&ensp;&ensp;&ensp;neighbor.visited = true;<br>&ensp;&ensp;&ensp;}<br>&ensp;&ensp;}<br>&ensp;}<br>}|
 | **Dijkstra's Algorithm**     | Finds the shortest path from a source to all other vertices. | 1. Initialize a priority queue with the source node (distance = 0).<br>2. While the priority queue is not empty:<br>&ensp;&ensp;- Remove the node with the smallest distance.<br>&ensp;&ensp;- For each neighbor of the node:<br>&ensp;&ensp;&ensp;&ensp;- Calculate the new distance.<br>&ensp;&ensp;&ensp;&ensp;- If the new distance is smaller, update the neighbor's distance and add it to the queue. | void dijkstra(Graph graph, Node source) {<br>&ensp;PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt(n -> n.distance));<br>&ensp;source.distance = 0;<br>&ensp;pq.add(source);<br>&ensp;while (!pq.isEmpty()) {<br>&ensp;&ensp;Node current = pq.poll();<br>&ensp;&ensp;for (Edge edge : current.edges) {<br>&ensp;&ensp;&ensp;Node neighbor = edge.target;<br>&ensp;&ensp;&ensp;int newDist = current.distance + edge.weight;<br>&ensp;&ensp;&ensp;if (newDist < neighbor.distance) {<br>&ensp;&ensp;&ensp;&ensp;neighbor.distance = newDist;<br>&ensp;&ensp;&ensp;&ensp;pq.add(neighbor);<br>&ensp;&ensp;&ensp;}<br>&ensp;&ensp;}<br>&ensp;}<br>} |
